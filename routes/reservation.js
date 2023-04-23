@@ -9,7 +9,7 @@ const router = new express.Router();
 router.post('/reservations', async (req, res) => {
   const reservation = new Reservation(req.body);
 
-  const QRCode = await generateQR(`https://elcinema.herokuapp.com/#/checkin/${reservation._id}`);
+  const QRCode = await generateQR(`https://book-my-show-ticket-booking.onrender.com/#/checkin/${reservation._id}`);
 
   try {
     await reservation.save();
@@ -19,7 +19,7 @@ router.post('/reservations', async (req, res) => {
   }
 });
 
-router.get('/reservations', async (req, res) => {
+router.get('/allReservations', async (req, res) => {
   try {
     const reservations = await Reservation.find({});
     res.send(reservations);

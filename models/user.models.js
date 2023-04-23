@@ -16,14 +16,12 @@ const userSchema = new mongoose.Schema(
       unique: true,
       required: true,
       trim: true,
-      lowercase: true,
     },
     email: {
       type: String,
       unique: true,
       required: true,
       trim: true,
-      lowercase: true,
       validate(value) {
         if (!validator.isEmail(value)) {
           throw new Error('email is invalid');
@@ -33,7 +31,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       trim: true,
-      minlength: 7,
+      minlength: 8,
       validate(value) {
         if (value.toLowerCase().includes('password')) {
           throw new Error('Password should not contain word: password');
@@ -43,12 +41,8 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       default: 'guest',
-      enum: ['guest', 'admin', 'superadmin'],
+      enum: ['guest', 'admin'],
     },
-
-    facebook: String,
-    google: String,
-
     phone: {
       type: String,
       unique: true,
@@ -59,35 +53,12 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
-    imageurl: {
-      type: String,
-    },
-    tokens: [
-      {
-        token: {
+    token: {
           type: String,
           required: true,
-        },
-      },
-    ],
+        },  
   },
-  {
-    timestamps: true,
-  }
 );
-
-userSchema.methods.toJSON = function() {
-  const user = this;
-  const userObject = user.toObject();
-  if (!userObject.role === 'superadmin') {
-    delete userObject.updatedAt;
-    delete userObject.__v;
-  }
-  delete userObject.password;
-  delete userObject.tokens;
-
-  return userObject;
-};
 
 userSchema.methods.generateAuthToken = async function() {
   const user = this;
